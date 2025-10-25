@@ -15,7 +15,7 @@ namespace PragueParking.Core
         public DateTime ArrivalTime { get; init; }
         public DateTime DepartureTime { get; set; }
         public decimal PricePerHour { get; init; }     // protected, same as Size
-        public ParkingSpace SpaceParked { get; set; }       // TODO: type parking space or int??
+        public ParkingSpace SpaceParked { get; set; }       // TODO: keep or remove?
 
 
         // Constructor
@@ -29,20 +29,35 @@ namespace PragueParking.Core
         public int HoursToCharge(DateTime arrival, DateTime departure)
         {
             TimeSpan parkedTime = departure - arrival;
-            double parkedMinutes = parkedTime.TotalMinutes - 10.0;     // first 10 mins free 
-            int hoursToCharge;                                         // must be an integer
+            double chargedHours = parkedTime.TotalHours - (10.0/ 60.0);     // first 10 mins free, so subract 10 mins as a fraction of an hour
 
-            // Price is per started hour 
-            if (parkedMinutes % 60 == 0)
+            // If no fee to be charged, return 0
+            if (chargedHours <= 0)
             {
-                hoursToCharge = (int)parkedMinutes / 60;
-            }
-            else
-            {
-                hoursToCharge = (int)(parkedMinutes / 60) + 1;
+                return 0;
             }
 
-            return hoursToCharge;
+            // Math.Ceiling rounds up to next whole number --> same as hours started
+            return (int)Math.Ceiling(chargedHours);
+
+        }
+        public string PrintParkingReceipt()
+        {
+            DepartureTime = DateTime.Now;
+            decimal parkingFee = HoursToCharge(ArrivalTime, DepartureTime) * PricePerHour;
+
+            StringBuilder checkedOutVehicle = new StringBuilder();
+            if (VehicleSize == 2)
+            {
+                checkedOutVehicle.AppendLine($"\nMC  {RegNumber}");
+            }
+            if (VehicleSize == 4)
+            {
+                checkedOutVehicle.AppendLine($"\nCAR  {RegNumber}");
+            }
+            checkedOutVehicle.AppendLine($"Arrival Time: {ArrivalTime:dd/MM/yyyy HH:mm}\nDeparture Time: {DepartureTime:dd/MM/yyyy HH:mm}\n" +
+                $"Price per Hour: {PricePerHour} CZK\nParking fee: {parkingFee} CZK");
+            return checkedOutVehicle.ToString();
         }
         public override string ToString()
         {

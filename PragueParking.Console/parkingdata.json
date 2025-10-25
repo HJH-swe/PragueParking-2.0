@@ -6,7 +6,7 @@
       {
         "RegNumber": "ABC123",
         "ArrivalTime": "2025-10-23T10:30:00",
-        "Size": 4,
+        "VehicleSize": 4,
         "PricePerHour": 20
       }
     ]
@@ -18,7 +18,7 @@
       {
         "RegNumber": "XYZ789",
         "ArrivalTime": "2025-10-23T11:15:00",
-        "Size": 2
+        "VehicleSize": 2
       }
     ]
   },
@@ -34,7 +34,7 @@
       {
         "RegNumber": "AAA111",
         "ArrivalTime": "2025-10-24T10:30:00",
-        "Size": 4,
+        "VehicleSize": 4,
         "PricePerHour": 20
       }
     ]
@@ -46,13 +46,13 @@
       {
         "RegNumber": "BBB222",
         "ArrivalTime": "2025-10-24T11:30:00",
-        "Size": 2,
+        "VehicleSize": 2,
         "PricePerHour": 10
       },
       {
         "RegNumber": "CCC333",
         "ArrivalTime": "2025-10-24T11:45:00",
-        "Size": 2,
+        "VehicleSize": 2,
         "PricePerHour": 10
       }
     ]
@@ -64,7 +64,7 @@
       {
         "RegNumber": "DDD444",
         "ArrivalTime": "2025-10-21T10:30:00",
-        "Size": 2,
+        "VehicleSize": 2,
         "PricePerHour": 10
       }
     ]
@@ -76,7 +76,7 @@
       {
         "RegNumber": "EEE555",
         "ArrivalTime": "2025-10-22T10:30:00",
-        "Size": 2,
+        "VehicleSize": 2,
         "PricePerHour": 10
       }
     ]
@@ -88,7 +88,7 @@
       {
         "RegNumber": "FFF666",
         "ArrivalTime": "2025-10-22T20:30:00",
-        "Size": 4,
+        "VehicleSize": 4,
         "PricePerHour": 20
       }
     ]

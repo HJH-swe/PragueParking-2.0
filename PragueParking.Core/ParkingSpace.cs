@@ -26,11 +26,7 @@ namespace PragueParking.Core
             AvailableSize = availableSize;
             ParkedVehicles = parkedVehicles;
         }
-        // Empty constructor
-        public ParkingSpace()
-        {
-            
-        }
+        
 
         // Methods
         public bool IsEnoughSpace(Vehicle vehicle)
@@ -49,6 +45,23 @@ namespace PragueParking.Core
                 AvailableSize -= vehicle.VehicleSize;
                 return true;
             }
+        }
+        public ParkingSpace RemoveVehicle(Vehicle vehicle)
+        {            
+            ParkedVehicles.Remove(vehicle);
+            AvailableSize += vehicle.VehicleSize;
+            return this;
+        }
+        public Vehicle FindVehicleInSpace(string regNumber)
+        {
+            foreach (var vehicle in ParkedVehicles)
+            {
+                if (vehicle.RegNumber == regNumber)
+                {
+                    return vehicle;
+                }
+            }
+            return null;
         }
         public string PrintParkingSpace(int spaceNumber)
         {

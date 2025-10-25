@@ -66,10 +66,45 @@ namespace PragueParking.Console
                     }
                 case "Check Out Vehicle":
                     {
+                        string regNumber = CollectRegNumber();
+                        ParkingSpace space = garage.FindVehicleSpace(regNumber);
+                        if (space == null)
+                        {
+
+                            AnsiConsole.Write(new Markup("Error! Vehicle not found.", Color.Blue));
+                            break;
+
+                        }
+                        Vehicle vehicle = space.FindVehicleInSpace(regNumber);
+                        if (vehicle == null)
+                        {
+                            AnsiConsole.Write(new Markup("Error! Vehicle not found.", Color.Blue));
+                            break;
+                        }
+                        space.RemoveVehicle(vehicle);
+                        AnsiConsole.Write(new Markup("Vehicle successfully checked out", Color.Orange1));
+                        AnsiConsole.Write(new Markup(vehicle.PrintParkingReceipt(), Color.Aquamarine1));
                         break;
                     }
                 case "Search for Vehicle":
                     {
+                        string regNumber = CollectRegNumber();
+                        ParkingSpace space = garage.FindVehicleSpace(regNumber);
+                        if (space == null)
+                        {
+
+                            AnsiConsole.Write(new Markup("Error! Vehicle not found.", Color.Blue));
+                            break;
+
+                        }
+                        Vehicle vehicle = space.FindVehicleInSpace(regNumber);
+                        if (vehicle == null)
+                        {
+                            AnsiConsole.Write(new Markup("Error! Vehicle not found.", Color.Blue));
+                            break;
+                        }
+
+                        AnsiConsole.Write(vehicle.ToString());
                         break;
                     }
                 case "Move Vehicle":
@@ -102,26 +137,11 @@ namespace PragueParking.Console
             AnsiConsole.Clear();
         }
 
+       
+
         public static Vehicle? SelectVehicleType()
         {
-            string regNumber = AnsiConsole.Prompt(
-                new TextPrompt<string>("[orange1]\nEnter registration number: [/]")
-                .AllowEmpty()                                                // Without AllowEmpty() nothing happened if the user just pressed Enter
-                                                                             // although, is that better?
-                .Validate(input =>                                          // Validation borrowed from Tim Corey
-                {
-                    input = input.Trim();
-                    if (string.IsNullOrWhiteSpace(input))
-                    { return ValidationResult.Error("[greenyellow]\nError! Registration number cannot be empty.[/]"); }
-
-                    if (input.Length < 1 || input.Length > 10)
-                    { return ValidationResult.Error("[greenyellow]\nError! Invalid registration number.[/]"); }
-
-                    return ValidationResult.Success();     // default case
-                })
-                );
-            // always want reg number in capital letters
-            regNumber = regNumber.ToUpper();
+            string regNumber = CollectRegNumber();
             List<string> vehicleOptions = new List<string>
             {
                 "[orange1]CAR[/]",
@@ -148,6 +168,28 @@ namespace PragueParking.Console
             }
 
         }
+        // Method: user input regnumber
+        private static string CollectRegNumber()
+        {
+            string regNumber = AnsiConsole.Prompt(
+                new TextPrompt<string>("[orange1]\nEnter registration number: [/]")
+                .AllowEmpty()                                                // Without AllowEmpty() nothing happened if the user just pressed Enter
+                                                                             // although, is that better?
+                .Validate(input =>                                          // Validation borrowed from Tim Corey
+                {
+                    input = input.Trim();
+                    if (string.IsNullOrWhiteSpace(input))
+                    { return ValidationResult.Error("[greenyellow]\nError! Registration number cannot be empty.[/]"); }
+
+                    if (input.Length < 1 || input.Length > 10)
+                    { return ValidationResult.Error("[greenyellow]\nError! Invalid registration number.[/]"); }
+
+                    return ValidationResult.Success();     // default case
+                })
+                );
+            // always want reg number in capital letters
+            return regNumber.ToUpper();
+        }
 
         //Method to load saved cars and configuration, and initialize all parking spaces
         public static ParkingGarage Initialize()
@@ -164,5 +206,6 @@ namespace PragueParking.Console
            
             return garage;
         }
+        
     }
 }

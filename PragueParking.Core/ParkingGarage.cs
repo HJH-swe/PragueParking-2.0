@@ -65,6 +65,22 @@ namespace PragueParking.Core
             // Return -1 if no free spaces, garage is full 
             return -1;
         }
+        public ParkingSpace FindVehicleSpace(string regNumber)
+        {
+            int spaceCounter = 1;
+            foreach (var parkingSpace in parkingSpaces)
+            {
+                foreach (var vehicle in parkingSpace.ParkedVehicles)
+                {
+                    if (vehicle.RegNumber == regNumber)
+                    {
+                        return parkingSpace;
+                    } 
+                }
+                spaceCounter++;
+            }
+            return null;
+        }
         public bool ParkVehicle(Vehicle vehicle, out int freeSpace)
         {
             freeSpace = FindFreeSpace(vehicle);
