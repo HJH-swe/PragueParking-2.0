@@ -1,0 +1,86 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+
+namespace PragueParking.Core
+{
+
+    public class ParkingSpace
+    {
+        // total size of parking spaces shouldn't be changed - so private readonly
+        private readonly int totalSize = 4;
+
+        // Properties - change setters for encapsulation?
+        public int SpaceNumber { get; set; }
+        public int AvailableSize { get; set; }
+        public List<Vehicle> ParkedVehicles { get; set; }
+
+        // A special constructor for JSON - found the idea online - ONLY CONSTRUCTOR?
+        [JsonConstructor]
+        public ParkingSpace(int spaceNumber, int availableSize, List<Vehicle> parkedVehicles)
+        {
+            SpaceNumber = spaceNumber;
+            AvailableSize = availableSize;
+            ParkedVehicles = parkedVehicles;
+        }
+        // Empty constructor
+        public ParkingSpace()
+        {
+            
+        }
+
+        // Methods
+        public bool IsEnoughSpace(Vehicle vehicle)
+        {
+            return vehicle.VehicleSize <= AvailableSize;
+        }
+        public bool AddVehicle(Vehicle vehicle)
+        {
+            if (IsEnoughSpace(vehicle) == false)
+            {
+                return false;
+            }
+            else
+            {
+                ParkedVehicles.Add(vehicle);
+                AvailableSize -= vehicle.VehicleSize;
+                return true;
+            }
+        }
+        public string PrintParkingSpace(int spaceNumber)
+        {
+            if (ParkedVehicles.Count == 0)
+            {
+                return $"Space {SpaceNumber}: (Empty)  -   Available space: {AvailableSize}";
+            }
+            else
+            {
+                string vehicles = "";
+                foreach (Vehicle vehicle in ParkedVehicles)
+                {
+                    vehicles += vehicle.RegNumber + "  ";
+                }
+                return $"Space {SpaceNumber}: {vehicles}\tAvailable space: {AvailableSize}";
+            }
+        }
+        public override string ToString()
+        {
+            if (ParkedVehicles.Count == 0)
+            {
+                return $"Space {SpaceNumber}: (Empty)  -   Avalable space: {AvailableSize}\n";
+            }
+            else
+            {
+                string vehicles = "";
+                foreach (Vehicle vehicle in ParkedVehicles)
+                {
+                    vehicles += vehicle.RegNumber + "  ";
+                }
+                return $"Space {SpaceNumber}: {vehicles} -   Available space: {AvailableSize}\n";
+            }
+        }
+    }
+}
