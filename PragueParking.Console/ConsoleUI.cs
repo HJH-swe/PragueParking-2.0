@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Spectre.Console;
 using PragueParking.Core;
 using PragueParking.Data;
+using System.Collections.Specialized;
 
 namespace PragueParking.Console
 {
@@ -13,11 +14,12 @@ namespace PragueParking.Console
         {
             FileManager fileManager = new FileManager();
             breaker = true;
-            Panel menuPanel = new Panel(new Markup("[greenyellow bold]MAIN MENU[/]").Centered());
-            menuPanel.Border = BoxBorder.Heavy;
-            menuPanel.BorderColor(Color.Orange1);
-            menuPanel.Padding = new(2, 1);
-            AnsiConsole.Write(menuPanel);
+            WritePanel("MAIN MENU", "#afff00");
+            //Panel menuPanel = new Panel(new Markup("[greenyellow bold]MAIN MENU[/]").Centered());
+            //menuPanel.Border = BoxBorder.Heavy;
+            //menuPanel.BorderColor(Color.Orange1);
+            //menuPanel.Padding = new(2, 1);
+            //AnsiConsole.Write(menuPanel);
 
             List<string> menuOptions = new List<string>
             {
@@ -41,9 +43,11 @@ namespace PragueParking.Console
             {
                 case "Park Vehicle":
                     {
-                        Vehicle? vehicleToPark = SelectVehicleType();
+                        Vehicle? vehicleToPark = SelectVehicleType(garage.MCVehicleSize, garage.CarVehicleSize, garage.AllowedVehicles, garage.pricelist);
                         if (vehicleToPark == null)
-                        { break; }
+                        { 
+                            break; 
+                        }
                         else
                         {
                             bool parked = garage.ParkVehicle(vehicleToPark, out int parkedSpace);
@@ -140,13 +144,15 @@ namespace PragueParking.Console
 
        
 
-        public static Vehicle? SelectVehicleType()
+        public static Vehicle? SelectVehicleType(int mcVehicleSize, int carVehicleSize, List<string> allowedVehicles, PriceList pricelist)
         {
             string regNumber = CollectRegNumber();
             List<string> vehicleOptions = new List<string>
             {
                 "[orange1]CAR[/]",
-                "[orange1]MC[/]\n\n",
+                "[orange1]MC[/]",
+                "[orange1]BANANABOAT[/]",
+                "[orange1]TANDEM BICYCLE[/]\n\n",
                 "[orange1]Exit to Main Menu[/]"
             };
             string vehicleSelect = AnsiConsole.Prompt(new SelectionPrompt<string>()
@@ -158,9 +164,42 @@ namespace PragueParking.Console
             switch (cleanSelect)
             {
                 case "CAR":
-                    { return new Car(regNumber); }
+                    {
+                        if (allowedVehicles.Contains(cleanSelect))
+                        {
+                            return new Car(regNumber, carVehicleSize, pricePerHour);
+                        }
+                        AnsiConsole.Write($"{cleanSelect} is not an allowed vehicle.");
+                        return null;
+                    }
                 case "MC":
-                    { return new MC(regNumber); }
+                    {
+                        if (allowedVehicles.Contains(cleanSelect))
+                        {
+                            return new MC(regNumber, carVehicleSize);
+                        }
+                        AnsiConsole.Write($"{cleanSelect} is not an allowed vehicle.");
+                        return null;
+                    }
+                case "BANANABOAT":
+                    {
+                        if (allowedVehicles.Contains(cleanSelect))
+                        {
+                            return new BananaBoat(regNumber, carVehicleSize);
+                        }
+                        AnsiConsole.Write($"{cleanSelect} is not an allowed vehicle.");
+                        return null;
+                    }
+                case "TANDEM BICYCLE":
+                    {
+                        if (allowedVehicles.Contains(cleanSelect))
+                        {
+                            return new TandemBicycle(regNumber, carVehicleSize);
+                        }
+                        AnsiConsole.Write($"{cleanSelect} is not an allowed vehicle.");
+                        return null;
+                    }
+
                 case "Exit to Main Menu":
                     { return null; }
                 default:
@@ -198,15 +237,28 @@ namespace PragueParking.Console
             var fileManager = new FileManager();
             string parkingPath = "../../../parkingdata.json";
             string configPath = "../../../configuration.json";
+            string priceListPath = "../../../pricelist.txt";
 
-            var parkingData = fileManager.LoadParkingData(parkingPath);
-            var config = fileManager.LoadConfiguration(configPath);
+            List<ParkingSpace> parkingData = fileManager.LoadParkingData(parkingPath);
+            Configuration config = fileManager.LoadConfiguration(configPath, priceListPath);
+            if (config == null)
+            {
+                WritePanel("ERROR! Could not initialize application!", "#ff0000");
+                throw new Exception("Could not find configuration files and/or price list.");
+            }
 
-            int garageSize = config.GarageSize;
-            ParkingGarage garage = new ParkingGarage(parkingData, garageSize);
+            ParkingGarage garage = new ParkingGarage(parkingData, config.GarageSize, config.AllowedVehicles, config.MCVehicleSize, config.CarVehicleSize);
            
             return garage;
         }
-        
+
+        private static void WritePanel(string panelText, string color)
+        {
+            Panel menuPanel = new Panel(new Markup($"[{color} bold]{ panelText}[/]").Centered());
+            menuPanel.Border = BoxBorder.Heavy;
+            menuPanel.BorderColor(Color.FromHex(color));
+            menuPanel.Padding = new(2, 1);
+            AnsiConsole.Write(menuPanel);
+        }
     }
 }

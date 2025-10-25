@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace PragueParking.Core
 {
 
-    public class Vehicle
+    public  class Vehicle
     {
         // Properties
         public string? RegNumber { get; init; }     // Found init online - property only set when object is constructed

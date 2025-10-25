@@ -11,19 +11,28 @@ namespace PragueParking.Core
     {
         private readonly List<ParkingSpace> parkingSpaces = new List<ParkingSpace>();
 
-        public ParkingGarage(List<ParkingSpace> savedData, int garageSize)
+        public ParkingGarage(List<ParkingSpace> savedData, int garageSize,List<string> allowedVehicles, int mcVehicleSize, int carVehicleSize, int mcPricePerHour, int carPricePerHour)
         {
             parkingSpaces = savedData;
             GarageSize = garageSize;
-
+            AllowedVehicles = allowedVehicles;
+            MCVehicleSize = mcVehicleSize;
+            CarVehicleSize = carVehicleSize;
+            McPricePerHour = mcPricePerHour;
+            CarPricePerHour = carPricePerHour;
+            
             for (int i = parkingSpaces.Count; i < GarageSize; i++)
             {
                 parkingSpaces.Add(new ParkingSpace(i+1, 4, new List<Vehicle>()));
             }
-
         }
 
         public int GarageSize { get; private set; }
+        public List<string> AllowedVehicles { get; set; }
+        public int MCVehicleSize { get; set; }
+        public int CarVehicleSize { get; set; }
+        public int McPricePerHour { get; set; }
+        public int CarPricePerHour { get; set; }
 
         // Methods
         public List<ParkingSpace> GetAllSpaces()

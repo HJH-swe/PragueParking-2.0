@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace PragueParking.Core
 {
-    public class MC : Vehicle
+    public class BananaBoat : Vehicle
     {
 
-        public MC(string regNumber, int vehicleSize) : base(regNumber)
+        public BananaBoat(string regNumber, int vehicleSize) : base(regNumber)
         {
             VehicleSize = vehicleSize;
             PricePerHour = 10;
