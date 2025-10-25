@@ -35,7 +35,7 @@ namespace PragueParking.Core
             if (vehicle is Car)
             {
 
-                for (int i = 1; i < parkingSpaces.Count; i++)
+                for (int i = 0; i < parkingSpaces.Count; i++)
                 {
                     if (parkingSpaces[i].AvailableSize == 4)
                     {

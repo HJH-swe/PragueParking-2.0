@@ -52,7 +52,7 @@ namespace PragueParking.Console
                                 AnsiConsole.Write(new Markup("\n[blue]Vehicle successfully parked.[/]\n\n"));
                                 AnsiConsole.Write(new Markup(garage.GetParkingSpace(parkedSpace).ToString(), Color.Orange1));
 
-                                fileManager.SaveParkingData(garage.GetAllSpaces(), "../../../test_parkingdata.json");
+                                fileManager.SaveParkingData(garage.GetAllSpaces(), "../../../parkingdata.json");
                             }
                             else
                             {
@@ -70,10 +70,8 @@ namespace PragueParking.Console
                         ParkingSpace space = garage.FindVehicleSpace(regNumber);
                         if (space == null)
                         {
-
                             AnsiConsole.Write(new Markup("Error! Vehicle not found.", Color.Blue));
                             break;
-
                         }
                         Vehicle vehicle = space.FindVehicleInSpace(regNumber);
                         if (vehicle == null)
@@ -84,6 +82,9 @@ namespace PragueParking.Console
                         space.RemoveVehicle(vehicle);
                         AnsiConsole.Write(new Markup("Vehicle successfully checked out", Color.Orange1));
                         AnsiConsole.Write(new Markup(vehicle.PrintParkingReceipt(), Color.Aquamarine1));
+                        
+                        //Update parkingdata file here - no earlier in case check out fails
+                        fileManager.SaveParkingData(garage.GetAllSpaces(), "../../../parkingdata.json");
                         break;
                     }
                 case "Search for Vehicle":
