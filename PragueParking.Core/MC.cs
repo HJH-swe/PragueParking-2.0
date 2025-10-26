@@ -10,10 +10,10 @@ namespace PragueParking.Core
     public class MC : Vehicle
     {
 
-        public MC(string regNumber, int vehicleSize) : base(regNumber)
+        public MC(string regNumber, int vehicleSize, int pricePerHour) : base(regNumber)
         {
             VehicleSize = vehicleSize;
-            PricePerHour = 10;
+            PricePerHour = pricePerHour;
         }
     }
 }

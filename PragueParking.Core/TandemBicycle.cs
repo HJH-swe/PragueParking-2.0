@@ -10,10 +10,9 @@ namespace PragueParking.Core
     public class TandemBicycle : Vehicle
     {
 
-        public TandemBicycle(string regNumber, int vehicleSize) : base(regNumber)
+        public TandemBicycle(string regNumber) : base(regNumber)
         {
-            VehicleSize = vehicleSize;
-            PricePerHour = 10;
+            
         }
     }
 }

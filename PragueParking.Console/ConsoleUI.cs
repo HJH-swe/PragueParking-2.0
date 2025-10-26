@@ -10,7 +10,7 @@ namespace PragueParking.Console
     public class ConsoleUI
     {
 
-        public static void MainMenu(ParkingGarage garage, out bool breaker)
+        public static void MainMenu(ParkingGarage garage, PriceList priceList, out bool breaker)
         {
             FileManager fileManager = new FileManager();
             breaker = true;
@@ -43,7 +43,7 @@ namespace PragueParking.Console
             {
                 case "Park Vehicle":
                     {
-                        Vehicle? vehicleToPark = SelectVehicleType(garage.MCVehicleSize, garage.CarVehicleSize, garage.AllowedVehicles, garage.pricelist);
+                        Vehicle? vehicleToPark = SelectVehicleType(garage.MCVehicleSize, garage.CarVehicleSize, garage.AllowedVehicles, priceList);
                         if (vehicleToPark == null)
                         { 
                             break; 
@@ -151,7 +151,7 @@ namespace PragueParking.Console
             {
                 "[orange1]CAR[/]",
                 "[orange1]MC[/]",
-                "[orange1]BANANABOAT[/]",
+                "[orange1]BANANA BOAT[/]",
                 "[orange1]TANDEM BICYCLE[/]\n\n",
                 "[orange1]Exit to Main Menu[/]"
             };
@@ -167,7 +167,7 @@ namespace PragueParking.Console
                     {
                         if (allowedVehicles.Contains(cleanSelect))
                         {
-                            return new Car(regNumber, carVehicleSize, pricePerHour);
+                            return new Car(regNumber, carVehicleSize, pricelist.CarVehiclePrice);
                         }
                         AnsiConsole.Write($"{cleanSelect} is not an allowed vehicle.");
                         return null;
@@ -176,16 +176,16 @@ namespace PragueParking.Console
                     {
                         if (allowedVehicles.Contains(cleanSelect))
                         {
-                            return new MC(regNumber, carVehicleSize);
+                            return new MC(regNumber, mcVehicleSize, pricelist.MCVehiclePrice);
                         }
                         AnsiConsole.Write($"{cleanSelect} is not an allowed vehicle.");
                         return null;
                     }
-                case "BANANABOAT":
+                case "BANANA BOAT":
                     {
                         if (allowedVehicles.Contains(cleanSelect))
                         {
-                            return new BananaBoat(regNumber, carVehicleSize);
+                            return new BananaBoat(regNumber);
                         }
                         AnsiConsole.Write($"{cleanSelect} is not an allowed vehicle.");
                         return null;
@@ -194,7 +194,7 @@ namespace PragueParking.Console
                     {
                         if (allowedVehicles.Contains(cleanSelect))
                         {
-                            return new TandemBicycle(regNumber, carVehicleSize);
+                            return new TandemBicycle(regNumber);
                         }
                         AnsiConsole.Write($"{cleanSelect} is not an allowed vehicle.");
                         return null;
@@ -231,27 +231,46 @@ namespace PragueParking.Console
             return regNumber.ToUpper();
         }
 
-        //Method to load saved cars and configuration, and initialize all parking spaces
-        public static ParkingGarage Initialize()
+        //Method to load saved cars, configuration, and initialize all parking spaces
+        public static (ParkingGarage garage, PriceList priceList) Initialize()
         {
+            // Configure ParkingGarage first
             var fileManager = new FileManager();
+
+            ParkingGarage garage = InitializeGarage(fileManager);
+            PriceList priceList = LoadPriceList(fileManager);
+
+            return (garage, priceList);
+        }
+        // Method to initialize Parking Garage
+        public static ParkingGarage InitializeGarage(FileManager fileManager)
+        {
             string parkingPath = "../../../parkingdata.json";
             string configPath = "../../../configuration.json";
-            string priceListPath = "../../../pricelist.txt";
 
             List<ParkingSpace> parkingData = fileManager.LoadParkingData(parkingPath);
-            Configuration config = fileManager.LoadConfiguration(configPath, priceListPath);
+            GarageConfiguration config = fileManager.LoadGarageConfiguration(configPath);
             if (config == null)
             {
                 WritePanel("ERROR! Could not initialize application!", "#ff0000");
-                throw new Exception("Could not find configuration files and/or price list.");
+                throw new Exception("Could not find configuration files.");
             }
-
             ParkingGarage garage = new ParkingGarage(parkingData, config.GarageSize, config.AllowedVehicles, config.MCVehicleSize, config.CarVehicleSize);
-           
             return garage;
         }
-
+        // Moethod to load Price List
+        public static PriceList LoadPriceList(FileManager fileManager)
+        {
+            string priceListPath = "../../../pricelist.txt";
+            PriceListConfiguration priceConfig = fileManager.LoadPriceList(priceListPath);
+            PriceList priceList = new PriceList(priceConfig.PriceList.MCVehiclePrice, priceConfig.PriceList.CarVehiclePrice);
+            if (priceList == null)
+            {
+                WritePanel("ERROR! Could not load price list!", "#ff0000");
+                throw new Exception("Could not find file for price list.");
+            }
+            return priceList;
+        }
         private static void WritePanel(string panelText, string color)
         {
             Panel menuPanel = new Panel(new Markup($"[{color} bold]{ panelText}[/]").Centered());

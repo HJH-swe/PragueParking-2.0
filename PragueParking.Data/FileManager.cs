@@ -42,17 +42,36 @@ namespace PragueParking.Data
             return savedData ?? new List<ParkingSpace>();
         }
 
-        public Configuration? LoadConfiguration(string configFilePath, string priceListFilePath)
+        public GarageConfiguration? LoadGarageConfiguration(string configFilePath)
         {
-            if (!File.Exists(configFilePath) || !File.Exists(priceListFilePath))
+            if (!File.Exists(configFilePath))
+            {
+                return null;
+            }
+
+            string jsonString = File.ReadAllText(configFilePath);
+            var configuration = JsonSerializer.Deserialize<GarageConfiguration>(jsonString);
+
+            return configuration;
+        }
+
+        public PriceListConfiguration? LoadPriceList(string priceListFilePath)
+        {
+            if (!File.Exists(priceListFilePath))
             {
                 return null;
             }
 
             // First we need somewhere to store the prices before we create the new file
-            PriceList pricelist = new PriceList();
             using (StreamReader sr = new StreamReader(priceListFilePath))
             {
+                PriceListConfiguration priceConfiguration = new PriceListConfiguration();
+                
+                // Program crashed because PriceList was null. Initialize PriceList here, and send in start values. 
+                // This doesn't seem like a sustainable solution, but it should work for now
+                priceConfiguration.PriceList = new PriceList(0, 0);
+
+                // Go through pricelist.txt line by line - find what's relevant
                 string line;
                 while ((line = sr.ReadLine()) != null)
                 {
@@ -61,34 +80,29 @@ namespace PragueParking.Data
                     {
                         continue;
                     }
-
-                    if (line.StartsWith("MC"))
+                    // Set PriceList properties directly
+                    if (line.StartsWith("CAR"))
                     {
-                        // mc.price=10
-                        pricelist.MC = Convert.ToInt32(line.Substring(line.IndexOf("=") + 1)); // mc.price[=]10
+                        
+                        priceConfiguration.PriceList.CarVehiclePrice = Convert.ToInt32(line.Substring(line.IndexOf("=") + 1)); // CAR.price[=]20
                     }
-                    else if (line.StartsWith("CAR"))
+                    else if (line.StartsWith("MC"))
                     {
-                        pricelist.CAR = Convert.ToInt32(line.Substring(line.IndexOf("=") + 1));
+                        priceConfiguration.PriceList.MCVehiclePrice = Convert.ToInt32(line.Substring(line.IndexOf("=") + 1));
                     }
                 }
+                
+                return priceConfiguration;
             }
-
-            // "Filerna för prislista och konfiguration kan gärna kombineras till en fil"
-            // Combine the two json files - either as files or when we have the two json strings
-            // Then deserialize into a "Configuration"
-
-            string jsonString = File.ReadAllText(configFilePath);
-            var configuration = JsonSerializer.Deserialize<Configuration>(jsonString);
-
-            configuration.PriceList = pricelist;
-            return configuration;
+            
         }
     }
 
-    public class Configuration
+   
+
+    public class GarageConfiguration
     {
-        public Configuration(int garageSize, List<string> allowedVehicles, int mcVehicleSize, int carVehicleSize)
+        public GarageConfiguration(int garageSize, List<string> allowedVehicles, int mcVehicleSize, int carVehicleSize)
         {
             GarageSize = garageSize;
             AllowedVehicles = allowedVehicles;
@@ -99,16 +113,16 @@ namespace PragueParking.Data
         public List<string> AllowedVehicles { get; }        // Don't need a setter, shouldn't change after configuration
         public int MCVehicleSize { get; }
         public int CarVehicleSize { get; }
+        
+    }
+    public class PriceListConfiguration
+    {
+        public PriceListConfiguration()
+        {
+            
+        }
         public PriceList PriceList { get; set; }
     }
 
-    public class PriceList
-    {
-        public PriceList()
-        {
-
-        }
-        public int MC { get; set; }
-        public int CAR { get; set; }
-    }
+    
 }

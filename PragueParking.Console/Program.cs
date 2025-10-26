@@ -12,12 +12,12 @@ namespace PragueParking.Console
         {
            // try
             //{
-                ParkingGarage garage = ConsoleUI.Initialize();
+                var (garage, priceList) = ConsoleUI.Initialize();
 
                 bool breaker = true;
                 do
                 {
-                    ConsoleUI.MainMenu(garage, out breaker);
+                    ConsoleUI.MainMenu(garage,priceList, out breaker);
                 }
                 while (breaker);
 

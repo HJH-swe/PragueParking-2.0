@@ -10,10 +10,9 @@ namespace PragueParking.Core
     public class BananaBoat : Vehicle
     {
 
-        public BananaBoat(string regNumber, int vehicleSize) : base(regNumber)
+        public BananaBoat(string regNumber) : base(regNumber)
         {
-            VehicleSize = vehicleSize;
-            PricePerHour = 10;
+            
         }
     }
 }

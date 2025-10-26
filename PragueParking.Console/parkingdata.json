@@ -24,6 +24,14 @@
         "DepartureTime": "0001-01-01T00:00:00",
         "PricePerHour": 0,
         "SpaceParked": null
+      },
+      {
+        "RegNumber": "QWEER3454",
+        "VehicleSize": 0,
+        "ArrivalTime": "2025-10-26T14:01:34.2880173+01:00",
+        "DepartureTime": "0001-01-01T00:00:00",
+        "PricePerHour": 10,
+        "SpaceParked": null
       }
     ]
   },
@@ -135,8 +143,17 @@
   },
   {
     "SpaceNumber": 10,
-    "AvailableSize": 4,
-    "ParkedVehicles": []
+    "AvailableSize": 0,
+    "ParkedVehicles": [
+      {
+        "RegNumber": "YUU999",
+        "VehicleSize": 4,
+        "ArrivalTime": "2025-10-26T13:59:05.407589+01:00",
+        "DepartureTime": "0001-01-01T00:00:00",
+        "PricePerHour": 20,
+        "SpaceParked": null
+      }
+    ]
   },
   {
     "SpaceNumber": 11,
