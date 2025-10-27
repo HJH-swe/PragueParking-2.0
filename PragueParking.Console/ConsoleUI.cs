@@ -14,12 +14,7 @@ namespace PragueParking.Console
         {
             FileManager fileManager = new FileManager();
             breaker = true;
-            WritePanel("MAIN MENU", "#afff00");
-            //Panel menuPanel = new Panel(new Markup("[greenyellow bold]MAIN MENU[/]").Centered());
-            //menuPanel.Border = BoxBorder.Heavy;
-            //menuPanel.BorderColor(Color.Orange1);
-            //menuPanel.Padding = new(2, 1);
-            //AnsiConsole.Write(menuPanel);
+            WritePanel("MAIN MENU", "#ff00ff", "#5fffd7");
 
             List<string> menuOptions = new List<string>
             {
@@ -33,7 +28,7 @@ namespace PragueParking.Console
             };
 
             string menuSelect = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                .Title("[orange1 bold]\n\nSelect in the menu using the arrow keys[/]")
+                .Title("[#ff00ff]\n\nSelect in the menu using the arrow keys[/]")
                 .AddChoices(menuOptions)
                 );
 
@@ -45,8 +40,8 @@ namespace PragueParking.Console
                     {
                         Vehicle? vehicleToPark = SelectVehicleType(garage.MCVehicleSize, garage.CarVehicleSize, garage.AllowedVehicles, priceList);
                         if (vehicleToPark == null)
-                        { 
-                            break; 
+                        {
+                            break;
                         }
                         else
                         {
@@ -54,7 +49,7 @@ namespace PragueParking.Console
                             if (parked)
                             {
                                 AnsiConsole.Write(new Markup("\n[blue]Vehicle successfully parked.[/]\n\n"));
-                                AnsiConsole.Write(new Markup(garage.GetParkingSpace(parkedSpace).ToString(), Color.Orange1));
+                                AnsiConsole.Write(new Markup(garage.GetParkingSpace(parkedSpace).ToString(), Color.Magenta1));
 
                                 fileManager.SaveParkingData(garage.GetAllSpaces(), "../../../parkingdata.json");
                             }
@@ -84,9 +79,9 @@ namespace PragueParking.Console
                             break;
                         }
                         space.RemoveVehicle(vehicle);
-                        AnsiConsole.Write(new Markup("\nVehicle successfully checked out.\n", Color.Orange1));
+                        AnsiConsole.Write(new Markup("\nVehicle successfully checked out.\n", Color.Magenta1));
                         AnsiConsole.Write(new Markup(vehicle.PrintParkingReceipt(), Color.Aquamarine1));
-                        
+
                         //Update parkingdata file here - no earlier in case check out fails
                         fileManager.SaveParkingData(garage.GetAllSpaces(), "../../../parkingdata.json");
                         break;
@@ -133,13 +128,14 @@ namespace PragueParking.Console
                             break;
                         }
                         // Try to park in new space - need space number
-                        string spaceNumberString = AnsiConsole.Prompt(new TextPrompt<string>("[orange1]\nEnter parking space to move vehicle to:[/]")
+                        string spaceNumberString = AnsiConsole.Prompt(new TextPrompt<string>("[#ff00ff]\nEnter parking space to move vehicle to:[/]")
                             .AllowEmpty()
-                            .Validate(input =>                                         
+                            .Validate(input =>
                             {
                                 if (string.IsNullOrWhiteSpace(input))
                                 {
-                                    return ValidationResult.Error($"[greenyellow]\nError! Please enter a number from 1 to {garage.GarageSize}.[/]"); }
+                                    return ValidationResult.Error($"[greenyellow]\nError! Please enter a number from 1 to {garage.GarageSize}.[/]");
+                                }
 
                                 if (Convert.ToInt32(input) < 1 || Convert.ToInt32(input) > garage.GarageSize)
                                 { return ValidationResult.Error($"[greenyellow]\nError! Parking spaces are numbered from 1 to {garage.GarageSize}.[/]"); }
@@ -147,7 +143,7 @@ namespace PragueParking.Console
                                 return ValidationResult.Success();     // default case
                             })
                             );
-                        int spaceNumber = int.Parse( spaceNumberString );
+                        int spaceNumber = int.Parse(spaceNumberString);
                         ParkingSpace spaceMoveTo = garage.GetParkingSpace(spaceNumber - 1);     // minus 1 for correct index
                         // Try to add the vehicle from above to new parking space
                         bool isParked = spaceMoveTo.AddVehicle(vehicle);
@@ -176,6 +172,33 @@ namespace PragueParking.Console
                     }
                 case "Reload Price List":
                     {
+                        List<string> updateOptions = new List<string>
+                        {
+                            "[#ff00ff]YES[/]",
+                            "[#ff00ff]NO[/]\n\n",
+                            "[#ff00ff]Exit to Main Menu[/]"
+                        };
+                        string updateSelect = AnsiConsole.Prompt(new SelectionPrompt<string>()
+                             .Title("[#ff00ff]\n\nDo you want to update prices of parked vehicles?[/]")
+                             .AddChoices(updateOptions)
+                        );
+                        string cleanUpdateSelect = Markup.Remove(updateSelect).Trim();
+                        if (cleanUpdateSelect == "YES")
+                        {
+                            // Update pricelist here, in case user selects "Exit to Main Menu"
+                            priceList = LoadPriceList(fileManager);
+                            garage.UpdateAllVehiclePrices(priceList);
+                            AnsiConsole.Write(new Markup($"\n\nPrices for all parked vehicles have been updated.", Color.Aquamarine1));
+                            // Re-save parked vehicles with new prices
+                            fileManager.SaveParkingData(garage.GetAllSpaces(), "../../../parkingdata.json");
+                        }
+                        else if (cleanUpdateSelect == "NO")
+                        {
+                            // Update pricelist here, in case user selects "Exit to Main Menu"
+                            priceList = LoadPriceList(fileManager);
+                            AnsiConsole.Write(new Markup($"\n\nNew prices will apply to new parked vehicles.", Color.Aquamarine1));
+                        }
+                        // No "else" needed. If user selects "Exit to Main Menu" --> break and return to Main Menu
                         break;
                     }
                 case "Close Prague Parking":
@@ -194,21 +217,21 @@ namespace PragueParking.Console
             AnsiConsole.Clear();
         }
 
-       
+
 
         public static Vehicle? SelectVehicleType(int mcVehicleSize, int carVehicleSize, List<string> allowedVehicles, PriceList pricelist)
         {
             string regNumber = CollectRegNumber();
             List<string> vehicleOptions = new List<string>
             {
-                "[orange1]CAR[/]",
-                "[orange1]MC[/]",
-                "[orange1]BANANA BOAT[/]",
-                "[orange1]TANDEM BICYCLE[/]\n\n",
-                "[orange1]Exit to Main Menu[/]"
+                "[#ff00ff]CAR[/]",
+                "[#ff00ff]MC[/]",
+                "[#ff00ff]BANANA BOAT[/]",
+                "[#ff00ff]TANDEM BICYCLE[/]\n\n",
+                "[#ff00ff]Exit to Main Menu[/]"
             };
             string vehicleSelect = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                .Title("[orange1 bold]\n\nSelect vehicle type using the arrow keys[/]")
+                .Title("[#ff00ff]\n\nSelect vehicle type using the arrow keys[/]")
                 .AddChoices(vehicleOptions)
             );
 
@@ -221,7 +244,7 @@ namespace PragueParking.Console
                         {
                             return new Car(regNumber, carVehicleSize, pricelist.CarVehiclePrice);
                         }
-                        AnsiConsole.Write($"{cleanSelect} is not an allowed vehicle.");
+                        AnsiConsole.Write(new Markup($"\n\n{cleanSelect} is not an allowed vehicle.", Color.Aquamarine1));
                         return null;
                     }
                 case "MC":
@@ -230,7 +253,7 @@ namespace PragueParking.Console
                         {
                             return new MC(regNumber, mcVehicleSize, pricelist.MCVehiclePrice);
                         }
-                        AnsiConsole.Write($"{cleanSelect} is not an allowed vehicle.");
+                        AnsiConsole.Write(new Markup($"\n\n{cleanSelect} is not an allowed vehicle.", Color.Aquamarine1));
                         return null;
                     }
                 case "BANANA BOAT":
@@ -239,7 +262,7 @@ namespace PragueParking.Console
                         {
                             return new BananaBoat(regNumber);
                         }
-                        AnsiConsole.Write($"{cleanSelect} is not an allowed vehicle.");
+                        AnsiConsole.Write(new Markup($"\n\n{cleanSelect} is not an allowed vehicle.", Color.Aquamarine1));
                         return null;
                     }
                 case "TANDEM BICYCLE":
@@ -248,7 +271,7 @@ namespace PragueParking.Console
                         {
                             return new TandemBicycle(regNumber);
                         }
-                        AnsiConsole.Write($"{cleanSelect} is not an allowed vehicle.");
+                        AnsiConsole.Write(new Markup($"\n\n{cleanSelect} is not an allowed vehicle.", Color.Aquamarine1));
                         return null;
                     }
 
@@ -264,7 +287,7 @@ namespace PragueParking.Console
         private static string CollectRegNumber()
         {
             string regNumber = AnsiConsole.Prompt(
-                new TextPrompt<string>("[orange1]\nEnter registration number: [/]")
+                new TextPrompt<string>("[#ff00ff]\nEnter registration number: [/]")
                 .AllowEmpty()                                                // Without AllowEmpty() nothing happened if the user just pressed Enter
                                                                              // although, is that better?
                 .Validate(input =>                                          // Validation borrowed from Tim Corey
@@ -304,31 +327,40 @@ namespace PragueParking.Console
             GarageConfiguration config = fileManager.LoadGarageConfiguration(configPath);
             if (config == null)
             {
-                WritePanel("ERROR! Could not initialize application!", "#ff0000");
-                throw new Exception("Could not find configuration files.");
+                WritePanel("ERROR! Could not initialize application!", "#ff0000", "#800000");
+                throw new Exception("Could not find configuration file.");
             }
             ParkingGarage garage = new ParkingGarage(parkingData, config.GarageSize, config.AllowedVehicles,
                 config.MCVehicleSize, config.CarVehicleSize, config.ParkingSpaceSize);
+            // Add check to see if Garage Size is smaller than amount of parking spaces in loaded data
+            // TODO: This doesn't catch if there are vehicles parked in spaces removed
+            if (garage.GarageSize < parkingData.Count)
+            {
+                garage.RemoveRangeOfSpaces(garage.GarageSize, parkingData.Count);
+            }
             return garage;
+
         }
         // Moethod to load Price List
         public static PriceList LoadPriceList(FileManager fileManager)
         {
             string priceListPath = "../../../pricelist.txt";
-            PriceListConfiguration priceConfig = fileManager.LoadPriceList(priceListPath);
-            PriceList priceList = new PriceList(priceConfig.PriceList.MCVehiclePrice, priceConfig.PriceList.CarVehiclePrice);
-            if (priceList == null)
+            PriceListConfiguration priceConfig = fileManager.ConfigurePriceList(priceListPath);
+            if (priceConfig == null)
             {
-                WritePanel("ERROR! Could not load price list!", "#ff0000");
-                throw new Exception("Could not find file for price list.");
+                WritePanel("ERROR! Could not load price list!", "#ff0000", "#800000");
+                throw new Exception("Could not find price list file.");
             }
+
+            PriceList priceList = new PriceList(priceConfig.PriceList.MCVehiclePrice, priceConfig.PriceList.CarVehiclePrice);
+
             return priceList;
         }
-        private static void WritePanel(string panelText, string color)
+        private static void WritePanel(string panelText, string textColor, string borderColor)
         {
-            Panel menuPanel = new Panel(new Markup($"[{color} bold]{ panelText}[/]").Centered());
+            Panel menuPanel = new Panel(new Markup($"[{textColor} bold]{panelText}[/]").Centered());
             menuPanel.Border = BoxBorder.Heavy;
-            menuPanel.BorderColor(Color.FromHex(color));
+            menuPanel.BorderColor(Color.FromHex(borderColor));
             menuPanel.Padding = new(2, 1);
             AnsiConsole.Write(menuPanel);
         }

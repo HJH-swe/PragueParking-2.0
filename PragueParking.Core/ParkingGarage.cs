@@ -114,7 +114,29 @@ namespace PragueParking.Core
                 return parkingSpaces[spaceNumber];
             }
         }
-
+        // Method to remove extra spaces if new configuration of Garage Size is smaller than before
+        public void RemoveRangeOfSpaces(int fromIndex, int toIndex)
+        {
+            parkingSpaces.RemoveRange(fromIndex, (toIndex - fromIndex));        // toIndex - fromIndex = number of spaces to remove
+                                                                                // fromIndex = 51, toIndex = 100, toIndex-fromIndex = 49
+        }
+        public void UpdateAllVehiclePrices(PriceList priceList)
+        {
+            foreach (var space in parkingSpaces)
+            {
+                foreach (var vehicle in space.ParkedVehicles)
+                {
+                    if (vehicle.VehicleSize == 4)
+                    {
+                        vehicle.PricePerHour = priceList.CarVehiclePrice;
+                    }
+                    else if (vehicle.VehicleSize == 2)
+                    {
+                        vehicle.PricePerHour = priceList.MCVehiclePrice;
+                    }
+                }
+            }
+        }
         public override string ToString()
         {
             StringBuilder parkingGarage = new StringBuilder();
@@ -139,6 +161,5 @@ namespace PragueParking.Core
             }
             return parkingGarage.ToString();
         }
-
     }
 }

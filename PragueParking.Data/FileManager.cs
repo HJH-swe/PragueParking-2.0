@@ -55,7 +55,7 @@ namespace PragueParking.Data
             return configuration;
         }
 
-        public PriceListConfiguration? LoadPriceList(string priceListFilePath)
+        public PriceListConfiguration? ConfigurePriceList(string priceListFilePath)
         {
             if (!File.Exists(priceListFilePath))
             {
@@ -67,8 +67,6 @@ namespace PragueParking.Data
             {
                 PriceListConfiguration priceConfiguration = new PriceListConfiguration();
 
-                // Program crashed because PriceList was null. Initialize PriceList here, and send in start values. 
-                // This doesn't seem like a sustainable solution, but it should work for now
                 priceConfiguration.PriceList = new PriceList();
 
                 // Go through pricelist.txt line by line - find what's relevant

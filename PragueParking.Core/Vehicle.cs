@@ -14,7 +14,7 @@ namespace PragueParking.Core
         public int VehicleSize { get; set; }     // protected so Size can be set in classes Car, MC etc.
         public DateTime ArrivalTime { get; init; }
         public DateTime DepartureTime { get; set; }
-        public decimal PricePerHour { get; init; }     // protected, same as Size
+        public decimal PricePerHour { get; set; }     // set so prices can be updated
        
         // Constructor
         public Vehicle(string regNumber)
