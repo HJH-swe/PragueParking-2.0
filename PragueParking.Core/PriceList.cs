@@ -8,6 +8,10 @@ namespace PragueParking.Core
 {
     public class PriceList
     {
+        public PriceList()
+        {
+            
+        }
         public PriceList(int mcPricePerHour, int carPricePerHour)
         {
             MCVehiclePrice = mcPricePerHour;

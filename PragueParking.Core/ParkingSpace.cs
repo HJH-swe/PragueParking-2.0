@@ -14,16 +14,18 @@ namespace PragueParking.Core
         private readonly int totalSize = 4;
 
         // Properties - change setters for encapsulation?
+        public int TotalSize { get; set; }
         public int SpaceNumber { get; set; }
         public int AvailableSize { get; set; }
         public List<Vehicle> ParkedVehicles { get; set; }
 
         // A special constructor for JSON - found the idea online - ONLY CONSTRUCTOR?
         [JsonConstructor]
-        public ParkingSpace(int spaceNumber, int availableSize, List<Vehicle> parkedVehicles)
+        public ParkingSpace(int totalSize, int spaceNumber, List<Vehicle> parkedVehicles)
         {
+            TotalSize = totalSize;
             SpaceNumber = spaceNumber;
-            AvailableSize = availableSize;
+            AvailableSize = totalSize;
             ParkedVehicles = parkedVehicles;
         }
         
@@ -46,6 +48,21 @@ namespace PragueParking.Core
                 return true;
             }
         }
+        // Method overload with int parking space - for moving vehicles
+        //public bool AddVehicle(Vehicle vehicle, ParkingSpace parkingSpace)
+        //{
+        //    if (IsEnoughSpace(vehicle) == false)
+        //    {
+        //        return false;
+        //    }
+        //    else
+        //    {
+        //        ParkedVehicles.Add(vehicle);
+        //        AvailableSize -= vehicle.VehicleSize;
+        //        return true;
+        //    }
+        //}
+
         public ParkingSpace RemoveVehicle(Vehicle vehicle)
         {            
             ParkedVehicles.Remove(vehicle);

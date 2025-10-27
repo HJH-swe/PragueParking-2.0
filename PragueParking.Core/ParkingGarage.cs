@@ -11,17 +11,19 @@ namespace PragueParking.Core
     {
         private readonly List<ParkingSpace> parkingSpaces = new List<ParkingSpace>();
 
-        public ParkingGarage(List<ParkingSpace> savedData, int garageSize,List<string> allowedVehicles, int mcVehicleSize, int carVehicleSize)
+        public ParkingGarage(List<ParkingSpace> savedData, int garageSize, List<string> allowedVehicles, 
+            int mcVehicleSize, int carVehicleSize, int parkingSpaceSize)
         {
             parkingSpaces = savedData;
             GarageSize = garageSize;
             AllowedVehicles = allowedVehicles;
             MCVehicleSize = mcVehicleSize;
             CarVehicleSize = carVehicleSize;
-            
+            ParkingSpaceSize = parkingSpaceSize;
+
             for (int i = parkingSpaces.Count; i < GarageSize; i++)
             {
-                parkingSpaces.Add(new ParkingSpace(i+1, 4, new List<Vehicle>()));
+                parkingSpaces.Add(new ParkingSpace(parkingSpaceSize, i + 1, new List<Vehicle>()));
             }
         }
 
@@ -29,8 +31,7 @@ namespace PragueParking.Core
         public List<string> AllowedVehicles { get; set; }
         public int MCVehicleSize { get; set; }
         public int CarVehicleSize { get; set; }
-        public int McPricePerHour { get; set; }
-        public int CarPricePerHour { get; set; }
+        public int ParkingSpaceSize { get; set; }
 
         // Methods
         public List<ParkingSpace> GetAllSpaces()
@@ -53,7 +54,7 @@ namespace PragueParking.Core
             else if (vehicle is MC)
             {
                 // Optimize parking - first check to fill 1 space with 2 MC
-                for (int i = 1; i < parkingSpaces.Count; i++)
+                for (int i = 1; i < parkingSpaces.Count; i++)               //TODO: Change i = 0?
                 {
                     if (parkingSpaces[i].AvailableSize == 2)
                     {
@@ -74,7 +75,7 @@ namespace PragueParking.Core
         }
         public ParkingSpace FindVehicleSpace(string regNumber)
         {
-            int spaceCounter = 1;
+            int spaceCounter = 0;
             foreach (var parkingSpace in parkingSpaces)
             {
                 foreach (var vehicle in parkingSpace.ParkedVehicles)
@@ -82,7 +83,7 @@ namespace PragueParking.Core
                     if (vehicle.RegNumber == regNumber)
                     {
                         return parkingSpace;
-                    } 
+                    }
                 }
                 spaceCounter++;
             }

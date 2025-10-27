@@ -11,13 +11,11 @@ namespace PragueParking.Core
     {
         // Properties
         public string? RegNumber { get; init; }     // Found init online - property only set when object is constructed
-        public int VehicleSize { get; init; }     // protected so Size can be set in classes Car, MC etc.
+        public int VehicleSize { get; set; }     // protected so Size can be set in classes Car, MC etc.
         public DateTime ArrivalTime { get; init; }
         public DateTime DepartureTime { get; set; }
         public decimal PricePerHour { get; init; }     // protected, same as Size
-        public ParkingSpace SpaceParked { get; set; }       // TODO: keep or remove?
-
-
+       
         // Constructor
         public Vehicle(string regNumber)
         {

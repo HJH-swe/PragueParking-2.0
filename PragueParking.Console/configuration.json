@@ -1,7 +1,7 @@
 {
   "GarageSize": 100,
   "AllowedVehicles": [ "MC", "CAR" ],
-  "MCVechicleSize": 2,
-  "CarVehicleSize": 4
-
+  "MCVehicleSize": 2,
+  "CarVehicleSize": 4,
+  "ParkingSpaceSize": 4
 }

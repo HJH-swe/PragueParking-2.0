@@ -84,7 +84,7 @@ namespace PragueParking.Console
                             break;
                         }
                         space.RemoveVehicle(vehicle);
-                        AnsiConsole.Write(new Markup("Vehicle successfully checked out", Color.Orange1));
+                        AnsiConsole.Write(new Markup("\nVehicle successfully checked out.\n", Color.Orange1));
                         AnsiConsole.Write(new Markup(vehicle.PrintParkingReceipt(), Color.Aquamarine1));
                         
                         //Update parkingdata file here - no earlier in case check out fails
@@ -109,11 +109,63 @@ namespace PragueParking.Console
                             break;
                         }
 
-                        AnsiConsole.Write(vehicle.ToString());
+                        AnsiConsole.Write(new Markup(vehicle.ToString(), Color.Aquamarine1));
                         break;
                     }
                 case "Move Vehicle":
                     {
+                        // Find vehicle by regnumber
+                        string regNumber = CollectRegNumber();
+                        // Save space number vehicle is in - space.SpaceNumber
+                        ParkingSpace space = garage.FindVehicleSpace(regNumber);
+                        if (space == null)
+                        {
+
+                            AnsiConsole.Write(new Markup("Error! Vehicle not found.", Color.Blue));
+                            break;
+
+                        }
+                        // "Get" vehicle from space
+                        Vehicle vehicle = space.FindVehicleInSpace(regNumber);
+                        if (vehicle == null)
+                        {
+                            AnsiConsole.Write(new Markup("Error! Vehicle not found.", Color.Blue));
+                            break;
+                        }
+                        // Try to park in new space - need space number
+                        string spaceNumberString = AnsiConsole.Prompt(new TextPrompt<string>("[orange1]\nEnter parking space to move vehicle to:[/]")
+                            .AllowEmpty()
+                            .Validate(input =>                                         
+                            {
+                                if (string.IsNullOrWhiteSpace(input))
+                                {
+                                    return ValidationResult.Error($"[greenyellow]\nError! Please enter a number from 1 to {garage.GarageSize}.[/]"); }
+
+                                if (Convert.ToInt32(input) < 1 || Convert.ToInt32(input) > garage.GarageSize)
+                                { return ValidationResult.Error($"[greenyellow]\nError! Parking spaces are numbered from 1 to {garage.GarageSize}.[/]"); }
+
+                                return ValidationResult.Success();     // default case
+                            })
+                            );
+                        int spaceNumber = int.Parse( spaceNumberString );
+                        ParkingSpace spaceMoveTo = garage.GetParkingSpace(spaceNumber - 1);     // minus 1 for correct index
+                        // Try to add the vehicle from above to new parking space
+                        bool isParked = spaceMoveTo.AddVehicle(vehicle);
+                        if (isParked)
+                        {
+                            AnsiConsole.Write(new Markup($"\n[aquamarine1]Vehicle successfully moved to space: {spaceMoveTo.SpaceNumber}.[/]\n\n"));
+                            AnsiConsole.Write(new Markup(spaceMoveTo.ToString(), Color.GreenYellow));
+
+                            // remove vehicle from original spot
+                            space.RemoveVehicle(vehicle);
+                            fileManager.SaveParkingData(garage.GetAllSpaces(), "../../../parkingdata.json");
+                        }
+                        else
+                        {
+                            AnsiConsole.Write(new Markup($"\n[blue]Unable to move vehicle to space: {spaceMoveTo.SpaceNumber}.[/]\n\n"));
+                            // Load data from last save - cancels out incomplete move
+                            fileManager.LoadParkingData("../../../parkingdata.json");
+                        }
                         break;
                     }
                 case "Parking Overview":
@@ -234,7 +286,7 @@ namespace PragueParking.Console
         //Method to load saved cars, configuration, and initialize all parking spaces
         public static (ParkingGarage garage, PriceList priceList) Initialize()
         {
-            // Configure ParkingGarage first
+            // both configuration methods need a FileManager
             var fileManager = new FileManager();
 
             ParkingGarage garage = InitializeGarage(fileManager);
@@ -255,7 +307,8 @@ namespace PragueParking.Console
                 WritePanel("ERROR! Could not initialize application!", "#ff0000");
                 throw new Exception("Could not find configuration files.");
             }
-            ParkingGarage garage = new ParkingGarage(parkingData, config.GarageSize, config.AllowedVehicles, config.MCVehicleSize, config.CarVehicleSize);
+            ParkingGarage garage = new ParkingGarage(parkingData, config.GarageSize, config.AllowedVehicles,
+                config.MCVehicleSize, config.CarVehicleSize, config.ParkingSpaceSize);
             return garage;
         }
         // Moethod to load Price List

@@ -66,10 +66,10 @@ namespace PragueParking.Data
             using (StreamReader sr = new StreamReader(priceListFilePath))
             {
                 PriceListConfiguration priceConfiguration = new PriceListConfiguration();
-                
+
                 // Program crashed because PriceList was null. Initialize PriceList here, and send in start values. 
                 // This doesn't seem like a sustainable solution, but it should work for now
-                priceConfiguration.PriceList = new PriceList(0, 0);
+                priceConfiguration.PriceList = new PriceList();
 
                 // Go through pricelist.txt line by line - find what's relevant
                 string line;
@@ -83,7 +83,7 @@ namespace PragueParking.Data
                     // Set PriceList properties directly
                     if (line.StartsWith("CAR"))
                     {
-                        
+
                         priceConfiguration.PriceList.CarVehiclePrice = Convert.ToInt32(line.Substring(line.IndexOf("=") + 1)); // CAR.price[=]20
                     }
                     else if (line.StartsWith("MC"))
@@ -91,38 +91,39 @@ namespace PragueParking.Data
                         priceConfiguration.PriceList.MCVehiclePrice = Convert.ToInt32(line.Substring(line.IndexOf("=") + 1));
                     }
                 }
-                
                 return priceConfiguration;
             }
-            
         }
     }
 
-   
+
 
     public class GarageConfiguration
     {
-        public GarageConfiguration(int garageSize, List<string> allowedVehicles, int mcVehicleSize, int carVehicleSize)
+        public GarageConfiguration(int garageSize, List<string> allowedVehicles,
+            int mcVehicleSize, int carVehicleSize, int parkingSpaceSize)
         {
             GarageSize = garageSize;
             AllowedVehicles = allowedVehicles;
             MCVehicleSize = mcVehicleSize;
             CarVehicleSize = carVehicleSize;
+            ParkingSpaceSize = parkingSpaceSize;
         }
-        public int GarageSize { get; }
-        public List<string> AllowedVehicles { get; }        // Don't need a setter, shouldn't change after configuration
+        public int GarageSize { get; }                  // Props don't need setters --> shouldn't change after configuration
+        public List<string> AllowedVehicles { get; }        
         public int MCVehicleSize { get; }
         public int CarVehicleSize { get; }
-        
+        public int ParkingSpaceSize { get; }
+
     }
     public class PriceListConfiguration
     {
         public PriceListConfiguration()
         {
-            
+
         }
         public PriceList PriceList { get; set; }
     }
 
-    
+
 }
