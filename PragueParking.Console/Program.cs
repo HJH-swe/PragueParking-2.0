@@ -20,9 +20,6 @@ namespace PragueParking.Console
                     ConsoleUI.MainMenu(garage,priceList, out breaker);
                 }
                 while (breaker);
-
-                AnsiConsole.Write(new Markup("[blue]\n\nPress any key to close.[/]"));
-                AnsiConsole.Console.Input.ReadKey(false);
             //}
             //catch (Exception ex)
             //{

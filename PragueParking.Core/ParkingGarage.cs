@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Spectre.Console;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Quic;
@@ -11,7 +12,7 @@ namespace PragueParking.Core
     {
         private readonly List<ParkingSpace> parkingSpaces = new List<ParkingSpace>();
 
-        public ParkingGarage(List<ParkingSpace> savedData, int garageSize, List<string> allowedVehicles, 
+        public ParkingGarage(List<ParkingSpace> savedData, int garageSize, List<string> allowedVehicles,
             int mcVehicleSize, int carVehicleSize, int parkingSpaceSize)
         {
             parkingSpaces = savedData;
@@ -137,6 +138,80 @@ namespace PragueParking.Core
                 }
             }
         }
+        public void VisualParkingGarage()
+        {
+            // One table for heading
+            Table header = new Table();
+            header.AddColumns("[#d7ffff]EMPTY SPACE:[/] [lime]GREEN[/]",
+                "[#d7ffff]PARTIALLY OCCUPIED:[/] [yellow]YELLOW[/]",
+                "[#d7ffff]FULL SPACE:[/] [red]RED[/]")
+                .Centered()
+                .Alignment(Justify.Center);
+            header.Border(TableBorder.HeavyEdge);
+            header.BorderColor(Color.Aquamarine1);
+            header.Width(70);
+
+            AnsiConsole.Write(header);
+
+            // Another table for visual over parking garage
+            Table allSpaces = new Table().Centered();
+            var colorString = string.Empty;
+            var printSpots = string.Empty;
+            int spaceCounter = 1, emptyCounter = 0, halfCounter = 0, fullCounter = 0;       // Will use counters for bar chart
+            foreach (var space in parkingSpaces)
+            {
+                if (space.AvailableSize == space.TotalSize)       // If available == total --> empty
+                {
+                    colorString = "lime";
+                    emptyCounter++;
+                }
+                else if (space.AvailableSize > 0 && space.AvailableSize < space.TotalSize)  // greater than 0, less than total --> partially occupied
+                {
+                    colorString = "yellow";
+                    halfCounter++;
+                }
+                else                                                                        // Only reasonable option left --> space occupied 
+                {
+                    colorString = "red";
+                    fullCounter++;
+                }
+                // Format spaces so numbers align nicely
+                if (spaceCounter < 10)
+                {
+                    printSpots += $"[{colorString}]{spaceCounter}    [/]";
+                }
+                else
+                {
+                    printSpots += $"[{colorString}]{spaceCounter}   [/]";        // TODO: Stick each number in panel?
+                }
+                spaceCounter++;
+            }
+
+            allSpaces.AddColumn(new TableColumn(printSpots).PadLeft(3)).Centered();
+            allSpaces.Border(TableBorder.HeavyEdge);
+            allSpaces.BorderColor(Color.Aquamarine1);
+            allSpaces.Width(70);
+            AnsiConsole.Write(allSpaces);
+
+            // Quick bar chart to show free/partially occupied/full spaces
+
+            var barChart = new BarChart()
+                //.Width(65)
+                .AddItem("[red]FULL SPACES[/]", fullCounter, Color.Red)
+                .AddItem("[yellow]PARTIALLY OCCUPIED[/]", halfCounter, Color.Yellow)
+                .AddItem("[lime]EMPTY SPACES[/]", emptyCounter, Color.Lime);
+
+            // Put chart in a table for nice format
+            Table chartTable = new Table()
+                .Width(70)
+                .Centered()
+                .Border(TableBorder.HeavyEdge)
+                .BorderColor(Color.Aquamarine1)
+                .AddColumn(new TableColumn(barChart).Centered());
+
+            AnsiConsole.Write(chartTable);
+
+        }
         public override string ToString()
         {
             StringBuilder parkingGarage = new StringBuilder();
@@ -163,3 +238,49 @@ namespace PragueParking.Core
         }
     }
 }
+
+// MATRIX FROM V1
+//string[,] parkingMatrix = new string[10, 10];
+//// Använder en räknare som börjar på 1 (för att p-plats 0 inte ska användas)
+//int counter = 1;
+
+//// Lägger in strängarna från vektorn parkingSpaces i matrisen
+//for (int i = 0; i < parkingMatrix.GetLength(0); i++)
+//{
+//    for (int j = 0; j < parkingMatrix.GetLength(1); j++)
+//    {
+//        // Räknaren används som index på parkingSpaces[] 
+//        parkingMatrix[i, j] = parkingSpaces[counter];
+//        counter++;
+//    }
+//}
+
+//// Räknaren börjar om på 1 (för att p-platserna börjar på 1)
+//counter = 1;
+//for (int i = 0; i < parkingMatrix.GetLength(0); i++)
+//{
+//    for (int j = 0; j < parkingMatrix.GetLength(1); j++)
+//    {
+//        if (parkingMatrix[i, j] != null)
+//        {
+//            // OM det står en bil eller två mc på platsen --> upptagen
+//            if (parkingMatrix[i, j].Contains("BIL") || parkingMatrix[i, j].Contains('|'))
+//            {
+//                Console.ForegroundColor = ConsoleColor.Red;
+//                Console.Write("\t" + counter.ToString().PadLeft(4));
+//            }
+//            // ANNARS OM det står en mc på platsen --> halvfylld
+//            else if (parkingMatrix[i, j].Contains("MC") && !(parkingMatrix[i, j].Contains('|')))
+//            {
+//                Console.ForegroundColor = ConsoleColor.Yellow;
+//                Console.Write("\t" + counter.ToString().PadLeft(4));
+//            }
+//        }
+//        // ANNARS: ingen bil eller mc på platsen --> tom
+//        else
+//        {
+//            Console.ForegroundColor = ConsoleColor.Green;
+//            Console.Write("\t" + counter.ToString().PadLeft(4));
+//        }
+//        counter++;
+//    }

@@ -167,7 +167,8 @@ namespace PragueParking.Console
                 case "Parking Overview":
                     {
                         // Change later to image overview
-                        AnsiConsole.Write(new Markup(garage.ToString(), Color.Aquamarine1));
+                        garage.VisualParkingGarage();
+                        //AnsiConsole.Write(new Markup(garage.ToString(), Color.Aquamarine1));
                         break;
                     }
                 case "Reload Price List":
@@ -203,12 +204,17 @@ namespace PragueParking.Console
                     }
                 case "Close Prague Parking":
                     {
+                        // Breaker is the on/off switch for the menu loop
                         breaker = false;
-                        break;
+                        // Save data one last time
+                        fileManager.SaveParkingData(garage.GetAllSpaces(), "../../../parkingdata.json");
+                        AnsiConsole.Write(new Markup($"\n\nParked vehicles saved to file.\n\n[slowblink]Good bye, and drive safe![/]", Color.Magenta1));
+                        break;                            
                     }
                 default:
                     {
-                        throw new Exception("Unexpected error!");
+                        WritePanel("Unexpected error!\nReturning to Main Menu", "#ff0000", "#800000");
+                        break;
                     }
             }
             //Remove later - just to check
