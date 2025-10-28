@@ -100,7 +100,7 @@ namespace PragueParking.Core
         {
             if (ParkedVehicles.Count == 0)
             {
-                return $"Space {SpaceNumber}: (Empty)  -   Avalable space: {AvailableSize}\n";
+                return $"Space {SpaceNumber}: (Empty)  -   Available space: {AvailableSize}\n";
             }
             else
             {

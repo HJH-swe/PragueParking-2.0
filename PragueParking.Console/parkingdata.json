@@ -37,12 +37,19 @@
   {
     "TotalSize": 4,
     "SpaceNumber": 3,
-    "AvailableSize": 2,
+    "AvailableSize": 0,
     "ParkedVehicles": [
       {
         "RegNumber": "POI098",
         "VehicleSize": 2,
         "ArrivalTime": "2025-10-27T15:57:15.831581+01:00",
+        "DepartureTime": "0001-01-01T00:00:00",
+        "PricePerHour": 10
+      },
+      {
+        "RegNumber": "AAA111",
+        "VehicleSize": 2,
+        "ArrivalTime": "2025-10-28T15:36:56.1738883+01:00",
         "DepartureTime": "0001-01-01T00:00:00",
         "PricePerHour": 10
       }
@@ -78,12 +85,19 @@
   {
     "TotalSize": 4,
     "SpaceNumber": 6,
-    "AvailableSize": 2,
+    "AvailableSize": 0,
     "ParkedVehicles": [
       {
         "RegNumber": "DDD444",
         "VehicleSize": 2,
         "ArrivalTime": "2025-10-21T10:30:00",
+        "DepartureTime": "0001-01-01T00:00:00",
+        "PricePerHour": 10
+      },
+      {
+        "RegNumber": "SWE123",
+        "VehicleSize": 2,
+        "ArrivalTime": "2025-10-25T17:07:28.0767048+02:00",
         "DepartureTime": "0001-01-01T00:00:00",
         "PricePerHour": 10
       }
@@ -92,12 +106,19 @@
   {
     "TotalSize": 4,
     "SpaceNumber": 7,
-    "AvailableSize": 2,
+    "AvailableSize": 0,
     "ParkedVehicles": [
       {
         "RegNumber": "EEE555",
         "VehicleSize": 2,
         "ArrivalTime": "2025-10-22T10:30:00",
+        "DepartureTime": "0001-01-01T00:00:00",
+        "PricePerHour": 10
+      },
+      {
+        "RegNumber": "GER000",
+        "VehicleSize": 2,
+        "ArrivalTime": "2025-10-28T16:40:03.2198036+01:00",
         "DepartureTime": "0001-01-01T00:00:00",
         "PricePerHour": 10
       }
@@ -120,16 +141,8 @@
   {
     "TotalSize": 4,
     "SpaceNumber": 9,
-    "AvailableSize": 0,
-    "ParkedVehicles": [
-      {
-        "RegNumber": "SSS333",
-        "VehicleSize": 4,
-        "ArrivalTime": "2025-10-25T21:21:25.8983706+02:00",
-        "DepartureTime": "0001-01-01T00:00:00",
-        "PricePerHour": 20
-      }
-    ]
+    "AvailableSize": 4,
+    "ParkedVehicles": []
   },
   {
     "TotalSize": 4,
@@ -344,8 +357,16 @@
   {
     "TotalSize": 4,
     "SpaceNumber": 45,
-    "AvailableSize": 4,
-    "ParkedVehicles": []
+    "AvailableSize": 2,
+    "ParkedVehicles": [
+      {
+        "RegNumber": "ESP444",
+        "VehicleSize": 2,
+        "ArrivalTime": "2025-10-28T16:41:43.8500687+01:00",
+        "DepartureTime": "0001-01-01T00:00:00",
+        "PricePerHour": 10
+      }
+    ]
   },
   {
     "TotalSize": 4,

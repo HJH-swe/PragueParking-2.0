@@ -107,7 +107,6 @@ namespace PragueParking.Core
         {
             if (spaceNumber < 0 || spaceNumber > parkingSpaces.Count)
             {
-                //AnsiConsole.Write(new Markup("[blue]Error! invalid parking space.[/]"));
                 return null;
             }
             else
@@ -140,18 +139,26 @@ namespace PragueParking.Core
         }
         public void VisualParkingGarage()
         {
-            // One table for heading
-            Table header = new Table();
-            header.AddColumns("[#d7ffff]EMPTY SPACE:[/] [lime]GREEN[/]",
+            // Header to match other menu headings        
+            Table header = new Table()
+                .Centered()
+                .Border(TableBorder.HeavyEdge)
+                .BorderColor(Color.Aquamarine1)
+                .Width(70);
+            header.AddColumn(new TableColumn("[#ff00ff bold] PRAGUE PARKING OVERVIEW[/]").Centered());
+            AnsiConsole.Write(header);
+
+            // One table for subheading
+            Table subHeader = new Table();
+            subHeader.AddColumns("[#d7ffff]EMPTY SPACE:[/] [lime]GREEN[/]",
                 "[#d7ffff]PARTIALLY OCCUPIED:[/] [yellow]YELLOW[/]",
                 "[#d7ffff]FULL SPACE:[/] [red]RED[/]")
                 .Centered()
                 .Alignment(Justify.Center);
-            header.Border(TableBorder.HeavyEdge);
-            header.BorderColor(Color.Aquamarine1);
-            header.Width(70);
-
-            AnsiConsole.Write(header);
+            subHeader.Border(TableBorder.HeavyEdge);
+            subHeader.BorderColor(Color.Aquamarine1);
+            subHeader.Width(70);
+            AnsiConsole.Write(subHeader);
 
             // Another table for visual over parking garage
             Table allSpaces = new Table().Centered();
