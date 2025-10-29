@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace PragueParking.Core
 {
-
     public  class Vehicle
     {
         // Properties
         public string? RegNumber { get; init; }     // Found init online - property only set when object is constructed
-        public int VehicleSize { get; set; }     // protected so Size can be set in classes Car, MC etc.
+        public int VehicleSize { get; set; }     
         public DateTime ArrivalTime { get; init; }
         public DateTime DepartureTime { get; set; }
         public decimal PricePerHour { get; set; }     // set so prices can be updated

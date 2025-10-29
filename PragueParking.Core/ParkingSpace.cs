@@ -48,21 +48,6 @@ namespace PragueParking.Core
                 return true;
             }
         }
-        // Method overload with int parking space - for moving vehicles
-        //public bool AddVehicle(Vehicle vehicle, ParkingSpace parkingSpace)
-        //{
-        //    if (IsEnoughSpace(vehicle) == false)
-        //    {
-        //        return false;
-        //    }
-        //    else
-        //    {
-        //        ParkedVehicles.Add(vehicle);
-        //        AvailableSize -= vehicle.VehicleSize;
-        //        return true;
-        //    }
-        //}
-
         public ParkingSpace RemoveVehicle(Vehicle vehicle)
         {            
             ParkedVehicles.Remove(vehicle);

@@ -42,7 +42,7 @@ namespace PragueParking.Data
             return savedData ?? new List<ParkingSpace>();
         }
 
-        public GarageConfiguration? LoadGarageConfiguration(string configFilePath)
+        public GarageConfiguration? ConfigureParkingGarage(string configFilePath)
         {
             if (!File.Exists(configFilePath))
             {

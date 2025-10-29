@@ -350,7 +350,7 @@ namespace PragueParking.Console
             string configPath = "../../../configuration.json";
 
             List<ParkingSpace> parkingData = fileManager.LoadParkingData(parkingPath);
-            GarageConfiguration config = fileManager.LoadGarageConfiguration(configPath);
+            GarageConfiguration config = fileManager.ConfigureParkingGarage(configPath);
             if (config == null)
             {
                 WritePanel("ERROR! Could not initialize application!", "#ff0000", "#800000");
