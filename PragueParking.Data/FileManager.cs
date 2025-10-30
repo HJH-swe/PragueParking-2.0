@@ -62,7 +62,7 @@ namespace PragueParking.Data
                 return null;
             }
 
-            // First we need somewhere to store the prices before we create the new file
+            // Use Streamreader to read pricelist file
             using (StreamReader sr = new StreamReader(priceListFilePath))
             {
                 PriceListConfiguration priceConfiguration = new PriceListConfiguration();

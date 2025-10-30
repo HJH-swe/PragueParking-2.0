@@ -23,7 +23,7 @@ namespace PragueParking.Console
             //}
             //catch (Exception ex)
             //{
-            //    AnsiConsole.Write(new Markup($"[blue]Error! {ex.Message}[/]"));
+            //    AnsiConsole.Write(new Markup($"[aquamarine1]Error! {ex.Message}[/]"));
             //    AnsiConsole.Console.Input.ReadKey(false);
             //}
         }
