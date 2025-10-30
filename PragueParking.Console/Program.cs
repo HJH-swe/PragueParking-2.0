@@ -10,8 +10,8 @@ namespace PragueParking.Console
     {
         private static void Main(string[] args)
         {
-           // try
-            //{
+            try
+            {
                 var (garage, priceList) = ConsoleUI.Initialize();
 
                 bool breaker = true;
@@ -20,12 +20,12 @@ namespace PragueParking.Console
                     ConsoleUI.MainMenu(garage,priceList, out breaker);
                 }
                 while (breaker);
-            //}
-            //catch (Exception ex)
-            //{
-            //    AnsiConsole.Write(new Markup($"[aquamarine1]Error! {ex.Message}[/]"));
-            //    AnsiConsole.Console.Input.ReadKey(false);
-            //}
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.Write(new Markup($"[red]Error! {ex.Message}[/]"));
+                AnsiConsole.Console.Input.ReadKey(false);
+            }
         }
     }
 }
