@@ -230,11 +230,6 @@ namespace PragueParking.Core
                 foreach (var parkingSpace in parkingSpaces)
                 {
                     parkingGarage.Append(parkingSpace + "\n");
-
-                    //if (parkingSpace != null)
-                    //{
-                    //    parkingGarage.Append(parkingSpace + "\n");
-                    //}
                 }
             }
             else
