@@ -118,8 +118,8 @@ namespace PragueParking.Core
         public void RemoveRangeOfSpaces(int fromIndex, int toIndex)
         {
             parkingSpaces.RemoveRange(fromIndex, (toIndex - fromIndex));        // toIndex - fromIndex = number of spaces to remove
-                                                                                // fromIndex = 51, toIndex = 100, toIndex-fromIndex = 49
         }
+        // Method to update prices if user wants to change prices of parked vehicles
         public void UpdateAllVehiclePrices(PriceList priceList)
         {
             foreach (var space in parkingSpaces)
@@ -167,7 +167,7 @@ namespace PragueParking.Core
             int spaceCounter = 1, emptyCounter = 0, halfCounter = 0, fullCounter = 0;       // Will use counters for bar chart
             foreach (var space in parkingSpaces)
             {
-                if (space.AvailableSize == space.TotalSize)       // If available == total --> empty
+                if (space.AvailableSize == space.TotalSize)                                  // If available == total --> empty
                 {
                     colorString = "lime";
                     emptyCounter++;
@@ -177,7 +177,7 @@ namespace PragueParking.Core
                     colorString = "yellow";
                     halfCounter++;
                 }
-                else                                                                        // Only reasonable option left --> space occupied 
+                else                                                                        // Only option left --> space occupied 
                 {
                     colorString = "red";
                     fullCounter++;
@@ -189,7 +189,7 @@ namespace PragueParking.Core
                 }
                 else
                 {
-                    printSpots += $"[{colorString}]{spaceCounter}   [/]";        // TODO: Stick each number in panel?
+                    printSpots += $"[{colorString}]{spaceCounter}   [/]";
                 }
                 spaceCounter++;
             }
@@ -203,7 +203,6 @@ namespace PragueParking.Core
             // Quick bar chart to show free/partially occupied/full spaces
 
             var barChart = new BarChart()
-                //.Width(65)
                 .AddItem("[red]FULL SPACES[/]", fullCounter, Color.Red)
                 .AddItem("[yellow]PARTIALLY OCCUPIED[/]", halfCounter, Color.Yellow)
                 .AddItem("[lime]EMPTY SPACES[/]", emptyCounter, Color.Lime);
@@ -226,7 +225,6 @@ namespace PragueParking.Core
 
             if (parkingSpaces.Count > 0)
             {
-                //parkingGarage.Append(string.Join("\n", parkingSpaces));
                 foreach (var parkingSpace in parkingSpaces)
                 {
                     parkingGarage.Append(parkingSpace + "\n");

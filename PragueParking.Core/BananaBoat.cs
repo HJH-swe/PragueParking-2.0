@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace PragueParking.Core
 {
+    // Not an allowed vehicle - empty class
     public class BananaBoat : Vehicle
     {
 

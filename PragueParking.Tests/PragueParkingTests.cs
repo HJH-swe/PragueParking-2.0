@@ -56,6 +56,5 @@ namespace PragueParking.Tests
             // Assert
             Assert.IsFalse(result);
         }
-           
     }
 }

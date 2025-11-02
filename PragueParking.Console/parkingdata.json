@@ -37,16 +37,8 @@
   {
     "TotalSize": 4,
     "SpaceNumber": 3,
-    "AvailableSize": 0,
-    "ParkedVehicles": [
-      {
-        "RegNumber": "AAA111",
-        "VehicleSize": 4,
-        "ArrivalTime": "2025-10-30T11:38:28.1143058+01:00",
-        "DepartureTime": "0001-01-01T00:00:00",
-        "PricePerHour": 20
-      }
-    ]
+    "AvailableSize": 4,
+    "ParkedVehicles": []
   },
   {
     "TotalSize": 4,

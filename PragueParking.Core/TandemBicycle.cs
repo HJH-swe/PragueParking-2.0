@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace PragueParking.Core
 {
+    // Not an allowed vehicle. Basically empty class
     public class TandemBicycle : Vehicle
     {
 

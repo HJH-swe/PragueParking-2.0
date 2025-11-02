@@ -11,10 +11,12 @@ namespace PragueParking.Data
 {
     public class FileManager
     {
+        // Empty constructor, no properties necessary
         public FileManager()
         {
         }
 
+        //Methods
         public string SaveParkingData<T>(T parkingSpaces, string filePath)
         {
             try

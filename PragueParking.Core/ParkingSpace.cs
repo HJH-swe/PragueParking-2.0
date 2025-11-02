@@ -13,13 +13,12 @@ namespace PragueParking.Core
         // total size of parking spaces shouldn't be changed - so private readonly
         private readonly int totalSize = 4;
 
-        // Properties - change setters for encapsulation?
         public int TotalSize { get; set; }
         public int SpaceNumber { get; set; }
         public int AvailableSize { get; set; }
         public List<Vehicle> ParkedVehicles { get; set; }
 
-        // A special constructor for JSON - found the idea online - ONLY CONSTRUCTOR?
+        // A special constructor for JSON - found the idea online
         [JsonConstructor]
         public ParkingSpace(int totalSize, int spaceNumber, List<Vehicle> parkedVehicles)
         {

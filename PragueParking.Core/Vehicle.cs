@@ -9,11 +9,11 @@ namespace PragueParking.Core
     public  class Vehicle
     {
         // Properties
-        public string? RegNumber { get; init; }     // Found init online - property only set when object is constructed
+        public string? RegNumber { get; init; }     // Init - property only set once, when object is constructed
         public int VehicleSize { get; set; }     
         public DateTime ArrivalTime { get; init; }
         public DateTime DepartureTime { get; set; }
-        public decimal PricePerHour { get; set; }     // set so prices can be updated
+        public decimal PricePerHour { get; set; }
        
         // Constructor
         public Vehicle(string regNumber)

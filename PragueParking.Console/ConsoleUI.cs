@@ -58,9 +58,6 @@ namespace PragueParking.Console
                             {
                                 AnsiConsole.Write(new Markup("\n[aquamarine1]No free space available.[/]\n\n"));
                             }
-
-                            // TODO: Add vehicle to spot, add to list in spot and amend list in garage
-                            AnsiConsole.Write(new Markup(vehicleToPark.ToString(), Color.Aquamarine1));
                         }
                         break;
                     }
@@ -103,10 +100,8 @@ namespace PragueParking.Console
                         ParkingSpace space = garage.FindVehicleSpace(regNumber);
                         if (space == null)
                         {
-                                
                             AnsiConsole.Write(new Markup("\n\nError! Vehicle not found.", Color.Aquamarine1));
                             break;
-
                         }
                         Vehicle vehicle = space.FindVehicleInSpace(regNumber);
                         if (vehicle == null)
@@ -127,7 +122,7 @@ namespace PragueParking.Console
                         {
                             break;
                         }
-                        // Save space number vehicle is in - space.SpaceNumber
+                        // Find space vehicle is in
                         ParkingSpace space = garage.FindVehicleSpace(regNumber);
                         if (space == null)
                         {
@@ -136,14 +131,14 @@ namespace PragueParking.Console
                             break;
 
                         }
-                        // "Get" vehicle from space
+                        // "Get" specific vehicle from space
                         Vehicle vehicle = space.FindVehicleInSpace(regNumber);
                         if (vehicle == null)
                         {
                             AnsiConsole.Write(new Markup("\n\nError! Vehicle not found.", Color.Aquamarine1));
                             break;
                         }
-                        // Try to park in new space - need space number
+                        // Try to park in new space - need parking space number
                         string spaceNumberString = AnsiConsole.Prompt(new TextPrompt<string>("[#ff00ff]\nEnter parking space to move vehicle to:[/]")
                             .AllowEmpty()
                             .Validate(input =>
@@ -154,9 +149,11 @@ namespace PragueParking.Console
                                 }
 
                                 if (Convert.ToInt32(input) < 1 || Convert.ToInt32(input) > garage.GarageSize)
-                                { return ValidationResult.Error($"[springgreen1]\n\nError! Parking spaces are numbered from 1 to {garage.GarageSize}.[/]"); }
+                                { 
+                                    return ValidationResult.Error($"[springgreen1]\n\nError! Parking spaces are numbered from 1 to {garage.GarageSize}.[/]"); 
+                                }
 
-                                return ValidationResult.Success();     // default case
+                                return ValidationResult.Success();
                             })
                             );
                         int spaceNumber = int.Parse(spaceNumberString);
@@ -182,7 +179,6 @@ namespace PragueParking.Console
                     }
                 case "Parking Overview":
                     {
-                        // Change later to image overview
                         garage.VisualParkingGarage();
                         List<string> updateOptions = new List<string>
                         {
@@ -196,7 +192,7 @@ namespace PragueParking.Console
                         string cleanUpdateSelect = Markup.Remove(updateSelect).Trim();
                         if (cleanUpdateSelect == "YES")
                         {
-                            // Print long list of parked vehicles - using ParkingGarage override ToString
+                            // Print long list of parking spaces - using ParkingGarage override ToString
                             AnsiConsole.Write(new Markup(garage.ToString(), Color.Aquamarine1));
                         }
                         break;
@@ -376,8 +372,7 @@ namespace PragueParking.Console
             }
             ParkingGarage garage = new ParkingGarage(parkingData, config.GarageSize, config.AllowedVehicles,
                 config.MCVehicleSize, config.CarVehicleSize, config.ParkingSpaceSize);
-            // Add check to see if Garage Size is smaller than amount of parking spaces in loaded data
-            // TODO: This doesn't catch if there are vehicles parked in spaces removed
+            // Remove parking spaces - no check for parked vehicles
             if (garage.GarageSize < parkingData.Count)
             {
                 garage.RemoveRangeOfSpaces(garage.GarageSize, parkingData.Count);
